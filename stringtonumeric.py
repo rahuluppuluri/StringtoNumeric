@@ -33,7 +33,7 @@ class StringtoNumeric(CustomTransformer):
     def transform(self, X: dt.Frame):
         def getKmers(sequence, size=6):
             return [sequence[x:x+size].lower() for x in range(len(sequence) - size + 1)]
-        X['words'] = X.apply(lambda x: getKmers(x), axis=1)
+        X['words'] = np.array(X).apply(lambda x: getKmers(x), axis=1)
         X_texts = list(X['words'])
         for item in range(len(X_texts)):
             X_texts[item] = ' '.join(X_texts[item])
