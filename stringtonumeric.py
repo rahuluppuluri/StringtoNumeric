@@ -28,14 +28,17 @@ class StringtoNumeric(CustomTransformer):
 
     def fit_transform(self, X: dt.Frame, y: np.array = None):
         return self.transform(X)
+      
 
     def transform(self, X: dt.Frame):
         def getKmers(sequence, size=6):
             return [sequence[x:x+size].lower() for x in range(len(sequence) - size + 1)]
-            human['words'] = human.apply(lambda x: getKmers(x['sequence']), axis=1)
-        human_texts = list(human['words'])
-        for item in range(len(human_texts)):
-            human_texts[item] = ' '.join(human_texts[item])
-        y_h = human.iloc[:, 0].values   
-            cv = CountVectorizer(ngram_range=(4,4))
-            X = cv.fit_transform(human_texts)
+        textcols = get_default_properties()
+        for key in textcols.keys():
+            X['words'] = X.apply(lambda x: getKmers(x[key]), axis=1)
+        X_texts = list(X['words'])
+        for item in range(len(X_texts)):
+            X_texts[item] = ' '.join(X_texts[item])
+        y_h = X.iloc[:, 0].values   
+        cv = CountVectorizer(ngram_range=(4,4))
+        X = cv.fit_transform(X_texts)
